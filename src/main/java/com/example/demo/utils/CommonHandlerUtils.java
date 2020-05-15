@@ -3,6 +3,8 @@ package com.example.demo.utils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
  * @version: 1.0
  */
 public class CommonHandlerUtils {
+    private static final Log log = LogFactory.getLog(CommonHandlerUtils.class);
     public static List<Map<String, Object>> sqlHandle(String sql, String desc){
         //返回查询结果
         List<Map<String, Object>> queryList = new ArrayList<>();
@@ -26,7 +29,9 @@ public class CommonHandlerUtils {
                 "jdbc:mysql://10.172.14.20:6612/sxcc?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false",
                 "root", "root");) {
             queryList = queryRunner.query(conn, sql, new MapListHandler());
+            log.info(desc+"查询成功");
         } catch (Exception e) {
+            log.info(desc+"查询失败");
         }
 
         return queryList;
@@ -40,13 +45,14 @@ public class CommonHandlerUtils {
      */
     public static void dataToLibrary(Map<String, Object> delMap, Map<String, Object> insertMap, String tableName,
                                      String infos) {
-        try (Connection conn = DBUtil.getConnection("com.mysql.cj.jdbc.Driver",
+        try(Connection conn = DBUtil.getConnection("com.mysql.jdbc.Driver",
                 "jdbc:mysql://10.172.14.20:6612/sxcc?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false",
-                "root", "root")){
+                "root", "root");) {
             DBUtil.delData2DB(tableName, delMap, conn);
             DBUtil.insertData2DB(tableName, insertMap, conn);
-            System.out.println(infos);
+           log.info(infos+"入库成功");
         } catch (Exception e) {
+            log.info(infos+"入库失败");
             e.printStackTrace();
         }
     }

@@ -385,7 +385,7 @@ public class InsertDataToSeasonTable {
 			// 得到月份
 			int month = dateTime1.getMonth().getValue();
 			// 如果月份大于等于三将平均气温转化为滑动平均气温
-			if (month >= 3) {
+			if (month >= 2) {
 				Double sum = Double.valueOf(tempAvg);
 				// 得到前四天的数据
 				LocalDateTime lacalDate1 = dateTime1.plusDays(-1);
